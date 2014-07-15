@@ -13,7 +13,7 @@ from . import api
 def get_user():
     """Retreives a single user from a Database, and render it using a HTML template"""
     try:
-        data = json.loads(request.data)
+        data = json.loads(request.data.decode(encoding='UTF-8'))
     except ValueError:
         return '', 400
     else:
@@ -21,7 +21,7 @@ def get_user():
 
     # For more complex queries, consider moving queries to a separate module
     with db as cur:
-        cur.execute(select('auth_user', {'email': email}, select=('username')))
+        cur.execute(select(b'auth_user', {b'email': bytes(email, 'UTF-8')}, select=(b'username')))
         try:
             user = one_to_dict(cur)
         except TypeError:

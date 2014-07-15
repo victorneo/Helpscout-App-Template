@@ -21,7 +21,8 @@ def is_helpscout_request(secret, request_data, helpscout_sig):
         request_data -- Raw (String) request data from Help Scout
         helpscout_sig -- Help Scout computed hash from X-HelpScout-Signature
     """
-    dig = hmac.new(secret, msg=request_data, digestmod=hashlib.sha1).digest()
+
+    dig = hmac.new(secret.encode(encoding='UTF-8'), msg=request_data, digestmod=hashlib.sha1).digest()
     computed_sig = base64.b64encode(dig).decode()
 
     return compare_digest(computed_sig, helpscout_sig)
